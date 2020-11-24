@@ -171,14 +171,14 @@ struct csp_cmp_message {
    @param[in,out] msg data.
    @return #CSP_ERR_NONE on success, otherwise an error code.
 */
-int csp_cmp(uint16_t node, uint32_t timeout, uint8_t code, int msg_size, struct csp_cmp_message *msg);
+int csp_cmp(int16_t return_node, uint16_t node, uint32_t timeout, uint8_t code, int msg_size, struct csp_cmp_message *msg);
 
 /**
    Macro for defining management handling function.
 */
 #define CMP_MESSAGE(_code, _memb) \
-static inline int csp_cmp_##_memb(uint16_t node, uint32_t timeout, struct csp_cmp_message *msg) { \
-	return csp_cmp(node, timeout, _code, CMP_SIZE(_memb), msg); \
+static inline int csp_cmp_##_memb(int16_t return_node, uint16_t node, uint32_t timeout, struct csp_cmp_message *msg) { \
+	return csp_cmp(return_node, node, timeout, _code, CMP_SIZE(_memb), msg); \
 }
 
 CMP_MESSAGE(CSP_CMP_IDENT, ident)
@@ -194,8 +194,8 @@ CMP_MESSAGE(CSP_CMP_CLOCK, clock)
    @param[out] msg peeked/read memory.
    @return #CSP_ERR_NONE on success, otherwise an error code.
 */
-static inline int csp_cmp_peek(uint16_t node, uint32_t timeout, struct csp_cmp_message *msg) {
-    return csp_cmp(node, timeout, CSP_CMP_PEEK, CMP_SIZE(peek) - sizeof(msg->peek.data) + msg->peek.len, msg);
+static inline int csp_cmp_peek(int16_t return_node, uint16_t node, uint32_t timeout, struct csp_cmp_message *msg) {
+    return csp_cmp(return_node, node, timeout, CSP_CMP_PEEK, CMP_SIZE(peek) - sizeof(msg->peek.data) + msg->peek.len, msg);
 }
 
 /**
@@ -205,8 +205,8 @@ static inline int csp_cmp_peek(uint16_t node, uint32_t timeout, struct csp_cmp_m
    @param[in] msg memory address, number of bytes and the actual bytes to poke/write.
    @return #CSP_ERR_NONE on success, otherwise an error code.
 */
-static inline int csp_cmp_poke(uint16_t node, uint32_t timeout, struct csp_cmp_message *msg) {
-    return csp_cmp(node, timeout, CSP_CMP_POKE, CMP_SIZE(poke) - sizeof(msg->poke.data) + msg->poke.len, msg);
+static inline int csp_cmp_poke(int16_t return_node, uint16_t node, uint32_t timeout, struct csp_cmp_message *msg) {
+    return csp_cmp(return_node, node, timeout, CSP_CMP_POKE, CMP_SIZE(poke) - sizeof(msg->poke.data) + msg->poke.len, msg);
 }
 
 #ifdef __cplusplus

@@ -343,7 +343,7 @@ int csp_conn_close(csp_conn_t * conn, uint8_t closed_by) {
 	return CSP_ERR_NONE;
 }
 
-csp_conn_t * csp_connect(uint8_t prio, uint16_t dest, uint8_t dport, uint32_t timeout, uint32_t opts) {
+csp_conn_t * csp_connect(uint8_t prio, int16_t src, uint16_t dest, uint8_t dport, uint32_t timeout, uint32_t opts) {
 
 	/* Force options on all connections */
 	opts |= csp_conf.conn_dfl_so;
@@ -351,13 +351,13 @@ csp_conn_t * csp_connect(uint8_t prio, uint16_t dest, uint8_t dport, uint32_t ti
 	/* Generate identifier */
 	csp_id_t incoming_id, outgoing_id;
 	incoming_id.pri = prio;
-	incoming_id.dst = csp_conf.address;
+	incoming_id.dst = src < 0 ? csp_conf.address : src;
 	incoming_id.src = dest;
 	incoming_id.sport = dport;
 	incoming_id.flags = 0;
 	outgoing_id.pri = prio;
 	outgoing_id.dst = dest;
-	outgoing_id.src = csp_conf.address;
+	outgoing_id.src = src < 0 ? csp_conf.address : src;
 	outgoing_id.dport = dport;
 	outgoing_id.flags = 0;
 

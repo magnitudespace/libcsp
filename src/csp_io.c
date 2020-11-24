@@ -326,9 +326,9 @@ int csp_transaction_persistent(csp_conn_t * conn, uint32_t timeout, void * outbu
 
 }
 
-int csp_transaction_w_opts(uint8_t prio, uint16_t dest, uint8_t port, uint32_t timeout, void * outbuf, int outlen, void * inbuf, int inlen, uint32_t opts) {
+int csp_transaction_w_opts(uint8_t prio, int16_t src, uint16_t dest, uint8_t port, uint32_t timeout, void * outbuf, int outlen, void * inbuf, int inlen, uint32_t opts) {
 
-	csp_conn_t * conn = csp_connect(prio, dest, port, 0, opts);
+	csp_conn_t * conn = csp_connect(prio, src, dest, port, 0, opts);
 	if (conn == NULL)
 		return 0;
 
@@ -352,7 +352,7 @@ csp_packet_t * csp_recvfrom(csp_socket_t * socket, uint32_t timeout) {
 
 }
 
-int csp_sendto(uint8_t prio, uint16_t dest, uint8_t dport, uint8_t src_port, uint32_t opts, csp_packet_t * packet, uint32_t timeout) {
+int csp_sendto(uint8_t prio, int16_t src, uint16_t dest, uint8_t dport, uint8_t src_port, uint32_t opts, csp_packet_t * packet, uint32_t timeout) {
 
 	if (!(opts & CSP_O_SAME))
 		packet->id.flags = 0;
@@ -391,7 +391,7 @@ int csp_sendto(uint8_t prio, uint16_t dest, uint8_t dport, uint8_t src_port, uin
 
 	packet->id.dst = dest;
 	packet->id.dport = dport;
-	packet->id.src = csp_conf.address;
+	packet->id.src = src;
 	packet->id.sport = src_port;
 	packet->id.pri = prio;
 
@@ -410,5 +410,5 @@ int csp_sendto_reply(const csp_packet_t * request_packet, csp_packet_t * reply_p
 		reply_packet->id.flags = request_packet->id.flags;
 	}
 
-	return csp_sendto(request_packet->id.pri, request_packet->id.src, request_packet->id.sport, request_packet->id.dport, opts, reply_packet, timeout);
+	return csp_sendto(request_packet->id.pri, request_packet->id.dst, request_packet->id.src, request_packet->id.sport, request_packet->id.dport, opts, reply_packet, timeout);
 }
