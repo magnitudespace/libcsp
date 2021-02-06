@@ -205,6 +205,19 @@ int csp_zmqhub_init_w_name_endpoints_rxfilter(const char * ifname,
 	// subscribe to all packets - no filter
 	assert(zmq_setsockopt(drv->subscriber, ZMQ_SUBSCRIBE, NULL, 0) == 0);
 
+	// Set connection keepalive.
+	int value = 60000;
+	assert(zmq_setsockopt(drv->publisher, ZMQ_HEARTBEAT_IVL, &value, sizeof(int)) == 0);
+	assert(zmq_setsockopt(drv->subscriber, ZMQ_HEARTBEAT_IVL, &value, sizeof(int)) == 0);
+
+	value = 10000;
+	assert(zmq_setsockopt(drv->publisher, ZMQ_HEARTBEAT_TIMEOUT, &value, sizeof(int)) == 0);
+	assert(zmq_setsockopt(drv->subscriber, ZMQ_HEARTBEAT_TIMEOUT, &value, sizeof(int)) == 0);
+
+	value = 70000;
+	assert(zmq_setsockopt(drv->publisher, ZMQ_HEARTBEAT_TTL, &value, sizeof(int)) == 0);
+	assert(zmq_setsockopt(drv->subscriber, ZMQ_HEARTBEAT_TTL, &value, sizeof(int)) == 0);
+
 	/* Connect to server */
 	assert(zmq_connect(drv->publisher, publish_endpoint) == 0);
 	assert(zmq_connect(drv->subscriber, subscribe_endpoint) == 0);
