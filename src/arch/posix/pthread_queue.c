@@ -124,7 +124,7 @@ static inline int wait_slot_available(pthread_queue_t * queue, struct timespec *
 			ret = pthread_cond_wait(&(queue->cond_full), &(queue->mutex));
 		}
 
-		if (ret != 0 && errno != EINTR) {
+		if (ret != 0) {
 			return PTHREAD_QUEUE_FULL; //Timeout
 		}
 	}
@@ -183,7 +183,7 @@ static inline int wait_item_available(pthread_queue_t * queue, struct timespec *
 			ret = pthread_cond_wait(&(queue->cond_empty), &(queue->mutex));
 		}
 
-		if (ret != 0 && errno != EINTR) {
+		if (ret != 0) {
 			return PTHREAD_QUEUE_EMPTY; //Timeout
 		}
 	}
