@@ -132,10 +132,8 @@ int csp_bin_sem_wait(csp_bin_sem_handle_t * sem, uint32_t timeout) {
 		} while (ret == -1 && errno == EINTR);
 	}
 
-	if (ret != 0) {
-		printf("Sem error: %d %d\n", ret, errno);
+	if (ret != 0)
 		return CSP_SEMAPHORE_ERROR;
-	}
 
 	return CSP_SEMAPHORE_OK;
 }
