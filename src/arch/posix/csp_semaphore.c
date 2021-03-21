@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <csp/arch/csp_semaphore.h>
 #include <csp/csp.h>
 #include <csp/csp_debug.h>
+#include <errno.h>
 
 int csp_mutex_create(csp_mutex_t * mutex) {
 	csp_log_lock("Mutex init: %p", mutex);
@@ -67,8 +68,9 @@ int csp_mutex_lock(csp_mutex_t * mutex, uint32_t timeout) {
 		ret = pthread_mutex_timedlock(mutex, &ts);
 	}
 
-	if (ret != 0)
+	if (ret != 0) {
 		return CSP_SEMAPHORE_ERROR;
+	}
 
 	return CSP_SEMAPHORE_OK;
 }
@@ -105,7 +107,9 @@ int csp_bin_sem_wait(csp_bin_sem_handle_t * sem, uint32_t timeout) {
 	csp_log_lock("Wait: %p timeout %"PRIu32, sem, timeout);
 
 	if (timeout == CSP_MAX_TIMEOUT) {
-		ret = sem_wait(sem);
+		do {
+			ret = sem_wait(sem);
+		} while (ret == -1 && errno == EINTR);
 	} else {
 		struct timespec ts;
 		if (clock_gettime(CLOCK_REALTIME, &ts)) {
@@ -123,11 +127,15 @@ int csp_bin_sem_wait(csp_bin_sem_handle_t * sem, uint32_t timeout) {
 
 		ts.tv_nsec = (ts.tv_nsec + nsec) % 1000000000;
 
-		ret = sem_timedwait(sem, &ts);
+		do {
+			ret = sem_timedwait(sem, &ts);
+		} while (ret == -1 && errno == EINTR);
 	}
 
-	if (ret != 0)
+	if (ret != 0) {
+		printf("Sem error: %d %d\n", ret, errno);
 		return CSP_SEMAPHORE_ERROR;
+	}
 
 	return CSP_SEMAPHORE_OK;
 }
