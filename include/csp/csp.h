@@ -51,6 +51,7 @@ extern "C" {
 typedef struct csp_conf_s {
 
 	uint16_t address;		/**< CSP address of the system */
+   uint16_t secondary_address; // Alternative address (for S-Band comms)
 
 	const char *hostname;		/**< Host name, returned by the #CSP_CMP_IDENT request */
 	const char *model;		/**< Model, returned by the #CSP_CMP_IDENT request */
