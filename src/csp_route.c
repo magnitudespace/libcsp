@@ -221,6 +221,7 @@ int csp_route_work(uint32_t timeout) {
 		if (csp_conf.allow_list && !csp_firewall_allow(csp_conf.allow_list, packet)) {
 			csp_log_warn("CSP packet dropped by firewall rule");
 			csp_buffer_free(packet);
+			return CSP_ERR_NONE;
 		}
 
 		/* Otherwise, actually send the message */
