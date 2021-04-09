@@ -33,6 +33,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <csp/csp_iflist.h>
 #include <csp/csp_sfp.h>
 #include <csp/csp_promisc.h>
+#include <csp/csp_firewall.h>
 
 /** Max timeout */
 #define CSP_MAX_TIMEOUT (UINT32_MAX)
@@ -67,6 +68,7 @@ typedef struct csp_conf_s {
 	uint32_t conn_dfl_so;		/**< Default connection options. Options will always be or'ed onto new connections, see csp_connect() */
 
 	uint8_t version;        /**< Protocol version to use (either 1 or 2) */
+   csp_allow_list_t *allow_list;
 } csp_conf_t;
 
 /**

@@ -218,6 +218,11 @@ int csp_route_work(uint32_t timeout) {
 			return CSP_ERR_NONE;
 		}
 
+		if (csp_conf.allow_list && !csp_firewall_allow(csp_conf.allow_list, packet)) {
+			csp_log_warn("CSP packet dropped by firewall rule");
+			csp_buffer_free(packet);
+		}
+
 		/* Otherwise, actually send the message */
 		if (csp_send_direct(packet->id, packet, ifroute, 0) != CSP_ERR_NONE) {
 			csp_log_warn("Router failed to send");
