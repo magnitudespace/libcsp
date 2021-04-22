@@ -195,7 +195,7 @@ int csp_send_direct(csp_id_t idout, csp_packet_t * packet, const csp_route_t * i
 #endif
 
 	/* Only encrypt packets from the current node */
-	if (idout.src == csp_conf.address) {
+	if (idout.src == csp_conf.address || idout.src == csp_conf.secondary_address) {
 		/* Append HMAC */
 		if (idout.flags & CSP_FHMAC) {
 #if (CSP_USE_HMAC)
