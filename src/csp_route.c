@@ -201,13 +201,8 @@ int csp_route_work(uint32_t timeout) {
 	}
 #endif
 
-	/* Check if packet matches my alternative return address */
-	if (packet->id.dst == csp_conf.secondary_address) {
-		packet->id.dst = csp_conf.address;
-	}
-
 	/* If the message is not to me, route the message to the correct interface */
-	if ((packet->id.dst != csp_conf.address) && (packet->id.dst != csp_id_get_max_nodeid())) {
+	if ((packet->id.dst != csp_conf.address && packet->id.dst != csp_conf.secondary_address) && (packet->id.dst != csp_id_get_max_nodeid())) {
 
 		/* Find the destination interface */
 		const csp_route_t * ifroute = csp_rtable_find_route(packet->id.dst);
