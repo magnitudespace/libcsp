@@ -129,6 +129,12 @@ typedef struct {
 #define CSP_PACKET_PADDING_BYTES 8
 #endif
 
+struct request_metadata_t {
+   int return_node;
+   int timeout;
+   uint64_t context_id;
+};
+
 //doc-begin:csp_packet_t
 /**
    CSP Packet.
@@ -147,6 +153,8 @@ typedef struct {
 
 	uint16_t length;			// Data length
 	csp_id_t id;				// CSP id (unpacked version CPU readable)
+
+	struct request_metadata_t metadata; // contains metadata for the packet (used by the upper golang layer)
 
 	uint8_t * frame_begin;
 	uint16_t frame_length;

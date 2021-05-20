@@ -96,6 +96,7 @@ struct csp_conn_s {
 #if (CSP_USE_RDP)
 	csp_rdp_t rdp;			/* RDP state */
 #endif
+	struct request_metadata_t metadata;
 };
 
 int csp_conn_enqueue_packet(csp_conn_t * conn, csp_packet_t * packet);
